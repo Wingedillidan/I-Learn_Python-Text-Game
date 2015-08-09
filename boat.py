@@ -13,7 +13,6 @@ class Foyer(Room):
         print "You enter the Foyer."
         print "Infront of you lies a grand staircase that reaches 2 stories tall." \
               "alongside are 2 magnificent doorways on either side.\n\n"
-        
         print "Valid directions are East, West, and Up"
         
         return self.exit()
@@ -53,7 +52,6 @@ class WestHall(self):
             return self.dark()
         
         print "There is a single door on either side, and the hallway stretches on...\n\n"
-        
         print "Valid directions are North, East, and West."
         
         return self.exit()
