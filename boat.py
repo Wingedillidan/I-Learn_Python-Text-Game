@@ -1,63 +1,19 @@
-import random, tools
+# Oregon trail style game with random events along the journey, except in a boat on the river.
+# There are 3 sections of riverway, therefore there are 5 towns/stops
+# Sea is too open, open world games means lots of extra work =(
+# Possible names: Chrimvera, Privako
+# Type of boat? Uhhhhh
+# 
+# Code by Collin McLean
 
-class Room(object):
-    
-    def __init__(self, prompt='> '):
-        self.prompt = prompt
-        self.dark = False
-        
+import tools, event
 
-class Foyer(Room):
-    
-    def enter(self):
-        print "You enter the Foyer."
-        print "Infront of you lies a grand staircase that reaches 2 stories tall." \
-              "alongside are 2 magnificent doorways on either side.\n\n"
-        print "Valid directions are East, West, and Up"
-        
-        return self.exit()
-    
-    def exit(self):
-        while True:
-            response = tools.answer(self.prompt)
-            
-            if response == 'go east':
-                return 'EastHall'
-            elif response == 'go west':
-                return 'WestHall'
-            elif response == 'go up':
-                return 'UpperHall'
-            elif ('look' and 'up') in response:
-                print "It's a staircase oOoOoOoOo"
-            elif 'look' in response:
-                print "It's a door!"
-            else:
-                print "I couldn't quite get that..."
-    
-    
-class WestHall(self):
-    def __init__(self, dark):
-        self.dark = dark
-    
-    
-    def dark(self):
-        print "It is too dark =("
-        return "Return"
-    
-    
-    def enter(self):
-        print "You enter the South Hallway"
-        
-        if self.dark == True:
-            return self.dark()
-        
-        print "There is a single door on either side, and the hallway stretches on...\n\n"
-        print "Valid directions are North, East, and West."
-        
-        return self.exit()
-    
-    
-    def exit(self):
-        pass
+class River(object):
+    pass
 
 
+class RiverSection(object):
+    pass
+
+
+class Town(object)
