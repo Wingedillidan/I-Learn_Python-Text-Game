@@ -9,54 +9,66 @@
 import tools, event
 
 class River(object):
+
     def __init__(self):
         pass
     
-    def setsail(self, length, day):
+    def setsail(self):
         pass
 
 
 class Town(object):
+
     pass
 
 
 class Chimvera(Town):
+
     pass
 
 
 class Privako(Town):
+
     pass
     
     
 class Kaapa(Town):
+
     pass
 
     
 class Bonco(Town):
+
     pass
 
 
 class PoopTown(Town):
+
     pass
 
 
 class Map(object):
-    Towns = {'Chimvera': Chimvera(), 'Privako': Privako(), 'Kaapa': Kaapa(), \
-             'Bonco': Bonco(), 'PoopTown': PoopTown()}
+
+    towns = {'Chimvera': Chimvera(),
+        'Privako': Privako(),
+        'Kaapa': Kaapa(),
+        'Bonco': Bonco(),
+        'PoopTown': PoopTown()
+    }
     
     def __init__(self, start):
-        self.start = Towns[start]
+        self.start = self.towns.get(start)
         self.nextTown = None
     
     
     def town(self):
         if not self.next:
-            self.next = Towns[self.start.enter()]
+            self.next = self.towns[self.start.enter()]
         else:
-            self.next = Towns[self.next.enter()]
+            self.next = self.towns[self.next.enter()]
     
     def num(self):
-        return len(Towns)
+        return len(self.towns)
 
             
 class Journey(object):
@@ -68,8 +80,14 @@ class Journey(object):
         path = River()
         day = 0
         
-        for section in xrange(0, self.map.num()-1)
-            self.map.town()
+        for part in xrange(0, self.map.num()-1):
+            # self.map.town()
             day += 1
             
-            path.setsail(rlength[section], day)
+            # if the rlength tuple (tracks journey length between towns) does not have enough values, it will
+            # assume the towns are neighboring and have a 0 unit distance.
+            if not part > len(rlength)-1:
+                for section in xrange(0, rlength[part]):
+                    path.setsail()
+                    day += 1
+            
