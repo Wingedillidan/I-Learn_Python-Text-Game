@@ -14,7 +14,7 @@ class River(object):
         pass
     
     def setsail(self):
-        pass
+        event.Generate()
 
 
 class Town(object):
