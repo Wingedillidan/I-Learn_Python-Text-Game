@@ -2,44 +2,91 @@
 # 
 # Code by Collin McLean
 
-import random
+import random, tools
+from sys import exit
 
-class RandEvent(object):
+class Event(object):
+    
+    lose_msgs = ['You deaded', 'DOOOOOOOOM!', 'You have been made unalive', 'Over Game :c',
+                 'GG', 'You got rekt', 'RIP', 'Lel, supes dead', 'GG no re', 'Fin']
     
     def __init__(self, msg_invalid="Didn't understand that :/"):
         self.invalid = msg_invalid
     
-    def options(self, question, answers, prompt='> '):
+    
+    def ask(self, question, answers, prompt='> '):
         print question
         
-        for i in xrange(1, len(answers):
-            print '[%(i)i]' % i
+        for i in xrange(0, len(answers)):
+            print '[%(i)i] %(answer)s' % {'i': i+1, 'answer': answers[i]}
         
         while True:
             response = raw_input(prompt)
             
             try:
-                if int(response) < len(answers):
-                    return int(response)
+                if int(response)-1 < len(answers) and int(response) >= 0:
+                    return int(response)-1
             except ValueError:
                 pass
             
-            for answer in answers:
-                if answer 
+            for i in xrange(0, len(answers)):
+                if answers[i].lower().strip() == response.lower().strip():
+                    return i
+            
+            print self.invalid
+    
+    
+    def lose(self, msg=None):
+        if msg:
+            print msg
+        else:
+            i = random.randint(0, len(self.lose_msgs)-1)
+            print self.lose_msgs[i]
+        
+        tools.next()
+        
+        exit(0)
 
 ### ----------------- RIVER EVENTS ------------------
     
-class Snakes(RandEvent):
+class Snakes(Event):
     
     def scenario(self):
-        print "OH NOES! SNAKES ARRIVED ON YOUR BOAT!\n\n"
+        print "OH NOES! SNAKES ARRIVED ON YOUR BOAT!"
+        
+        response = self.ask('How to unsnake the boat?', ['Yell at them', 'Eat them'])
+        
+        if response == 0:
+            print "You yell as loud as you can, the snakes don't understand fleshbag."
+            self.lose("You deaded. c( o_o c)")
+        elif response == 1:
+            print "You ate ALL the snakes, looks like you wiggled you way out of this one."
+        else:
+            self.lose("Error'd, received an unpossible output from 'ask'ed question")
     
     
-class Rudder(RandEvent):
+class Rudder(Event):
     
     def scenario(self):
-        print "OH NOES! Rudder jam!"
+        print "OH NOES! Your rudder ajam!"
+        
+        response = self.ask('What do?', ['Use a stick to clear the clutter', 'Improvise'])
+        
+        if response == 0:
+            print "Your stick only added to the jam."
+            self.lose()
+        elif response == 1:
+            print "IMPROV!"
+        else:
+            self.lose("Error'd, received an unpossible output from 'ask'ed question")
 
+
+class Nothing(Event):
+    
+    def scenario(self):
+        print "It's calm in this stretch of river."
+        
+        
 ### --------------- <TOWN NAME> EVENTS ---------------
 
 

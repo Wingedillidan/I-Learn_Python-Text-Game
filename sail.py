@@ -18,33 +18,39 @@ class River(object):
 
 
 class Town(object):
-
-    pass
+    
+    def __init__(self):
+        pass
 
 
 class Chimvera(Town):
-
-    pass
+    
+    def enter(self):
+        print "CHIMVERA HOLDER"
+        
+        return 'Privako'
 
 
 class Privako(Town):
-
-    pass
+    
+    def enter(self):
+        print "PRIVAKO HOLDER"
+        
+        return 'Kaapa'
     
     
 class Kaapa(Town):
-
-    pass
-
     
-class Bonco(Town):
-
-    pass
+    def enter(self):
+        print "KAAPA HOLDER"
+        
+        return 'PoopTown'
 
 
 class PoopTown(Town):
-
-    pass
+    
+    def enter(self):
+        print "Congrats, you made it to the end! Welcome to PoopTown."
 
 
 class Map(object):
@@ -52,20 +58,17 @@ class Map(object):
     towns = {'Chimvera': Chimvera(),
         'Privako': Privako(),
         'Kaapa': Kaapa(),
-        'Bonco': Bonco(),
         'PoopTown': PoopTown()
     }
     
+    river_lengths = (1, 1, 1)
+    
     def __init__(self, start):
-        self.start = self.towns.get(start)
-        self.nextTown = None
+        self.next = self.towns.get(start)
     
     
     def town(self):
-        if not self.next:
-            self.next = self.towns[self.start.enter()]
-        else:
-            self.next = self.towns[self.next.enter()]
+        self.next = self.towns.get(self.next.enter())
     
     def num(self):
         return len(self.towns)
@@ -76,18 +79,31 @@ class Journey(object):
         self.map = map
     
     
-    def begin(self, rlength=(15,10,20)):
+    def begin(self):
         path = River()
         day = 0
         
-        for part in xrange(0, self.map.num()-1):
-            # self.map.town()
+        for part in xrange(0, self.map.num()):
+            tools.clear()
+            
+            print 'Day', day
+            self.map.town()
+            
+            tools.next(0)
             day += 1
             
             # if the rlength tuple (tracks journey length between towns) does not have enough values, it will
             # assume the towns are neighboring and have a 0 unit distance.
-            if not part > len(rlength)-1:
-                for section in xrange(0, rlength[part]):
+            if not part > len(self.map.river_lengths)-1:
+                for section in xrange(0, self.map.river_lengths[part]):
+                    tools.clear(2)
+                    
+                    print 'Day', day
                     path.setsail()
+                    
+                    tools.next(0)
                     day += 1
-            
+
+map = Map("Chimvera")
+engine = Journey(map)
+engine.begin()

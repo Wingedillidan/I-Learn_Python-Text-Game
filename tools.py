@@ -1,5 +1,8 @@
 def clear(lines=50):
-    print "\n"*lines
+    for i in xrange(lines / 2):
+        print "\n\n"
+    if lines % 2 > 0:
+        print "\n"
 
     
 def answer(prompt):
@@ -12,6 +15,6 @@ def answer(prompt):
         return response
 
 
-def next(prompt='PRESS ENTER TO CONTINUE'):
-    clear(2)
+def next(lines=2, prompt='PRESS ENTER TO CONTINUE'):
+    clear(lines)
     raw_input(prompt)
