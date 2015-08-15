@@ -1,8 +1,15 @@
 def clear(lines=50):
-    for i in xrange(lines / 2):
-        print "\n"
-    if lines % 2 > 0:
-        print ""
+    result = ''
+    
+    for i in xrange((lines-1) / 2):
+        result += "\n\n"
+    
+    if lines <= 0:
+        result = ''
+    elif lines % 2 == 0:
+        result += "\n"
+    
+    print result
 
     
 def answer(prompt):
@@ -14,6 +21,9 @@ def answer(prompt):
         
         return response
 
+
+def bar(lines=32):
+    return '|' * lines
 
 def next(lines=1, prompt='PRESS ENTER TO CONTINUE'):
     clear(lines)

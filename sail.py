@@ -16,6 +16,11 @@ class Ship(object):
         self.food = food
         self.scrap = scrap
         self.day = day
+        self.speed = 0
+    
+    def UI(self):
+        pass
+        # Where I left off 8/15/2015
         
 
 class River(object):
@@ -33,24 +38,30 @@ class River(object):
 class Town(object):
 
     distance = 0
+    odds = 0
     
-    def __init__(self):
-        pass
+    def __init__(self, ship):
+        self.player = ship
     
     
-    def sail(self, player):
-        for i in xrange(0, self.distance):
+    def sail(self):
+        for i in xrange(0, self.distance+self.player.speed):
             tools.clear(2)
-                    
-            print 'Day', player.day
+            
+            self.player.hp -= 5
+            print 'Day', self.player.day, '\nHealth:', self.player.hp
             River().setsail()
                     
-            tools.next(0)
-            player.day += 1
+            tools.next()
+            self.player.day += 1
         
-        print 'Day', player.day
+        tools.clear(2)
+        print 'Day', self.player.day, '\nHealth:', self.player.hp
+        
         result = self.enter()
-        player.day += 1
+        tools.next()
+        tools.clear()
+        self.player.day += 1
         
         return result
     
@@ -69,7 +80,8 @@ class Chimvera(Town):
 
 class Privako(Town):
     
-    distance = 1
+    distance = 5
+    odds = 70
     
     def enter(self):
         print "PRIVAKO HOLDER"
@@ -80,6 +92,7 @@ class Privako(Town):
 class Kaapa(Town):
     
     distance = 1
+    odds = 80
     
     def enter(self):
         print "KAAPA HOLDER"
@@ -90,6 +103,7 @@ class Kaapa(Town):
 class PoopTown(Town):
     
     distance = 1
+    odds = 90
     
     def enter(self):
         print "Congrats, you made it to the end! Welcome to PoopTown."
@@ -98,36 +112,37 @@ class PoopTown(Town):
 
 
 class Map(object):
-
-    towns = {'Chimvera': Chimvera(),
-        'Privako': Privako(),
-        'Kaapa': Kaapa(),
-        'PoopTown': PoopTown()
-    }
     
-    def __init__(self, start):
+    def __init__(self, start, ship):
+        self.player = ship
+        
+        self.towns = {'Chimvera': Chimvera(self.player),
+        'Privako': Privako(self.player),
+        'Kaapa': Kaapa(self.player),
+        'PoopTown': PoopTown(self.player)
+        }
+        
         self.next = self.towns.get(start)
     
     
-    def town(self, player):
-        self.next = self.towns.get(self.next.sail(player))
+    def town(self):
+        self.next = self.towns.get(self.next.sail())
     
     def num(self):
         return len(self.towns)
 
             
 class Journey(object):
-    def __init__(self, map, ship):
+    def __init__(self, map):
         self.map = map
-        self.player = ship
     
     
     def begin(self):
         while True:
-            self.map.town(self.player)
+            self.map.town()
                     
 
-map = Map("Chimvera")
 player = Ship()
-engine = Journey(map, player)
+map = Map("Chimvera", player)
+engine = Journey(map)
 engine.begin()
