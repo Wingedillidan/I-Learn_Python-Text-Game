@@ -25,25 +25,28 @@ class Event(object):
             
             try:
                 if int(response)-1 < len(answers) and int(response) >= 0:
+                    tools.clear(1)
                     return int(response)-1
             except ValueError:
                 pass
             
             for i in xrange(0, len(answers)):
                 if answers[i].lower().strip() == response.lower().strip():
+                    tools.clear(1)
                     return i
             
             print self.invalid
     
     
-    def lose(self, msg=None):
+    def lose(self, msg=None, error=0):
         if msg:
             print msg
         else:
             i = random.randint(0, len(self.lose_msgs)-1)
             print self.lose_msgs[i]
         
-        tools.next()
+        if error == 0:
+            tools.next()
         
         exit(0)
 
@@ -60,9 +63,9 @@ class Snakes(Event):
             print "You yell as loud as you can, the snakes don't understand fleshbag."
             self.lose("You deaded. c( o_o c)")
         elif response == 1:
-            print "You ate ALL the snakes, looks like you wiggled you way out of this one."
+            print "You ate ALL the snakes, looks like you wiggled your way out of this one."
         else:
-            self.lose("Error'd, received an unpossible output from 'ask'ed question")
+            self.lose("Error'd, received an unpossible output from 'ask'ed question", 1)
     
     
 class Rudder(Event):
@@ -78,8 +81,25 @@ class Rudder(Event):
         elif response == 1:
             print "IMPROV!"
         else:
-            self.lose("Error'd, received an unpossible output from 'ask'ed question")
+            self.lose("Error'd, received an unpossible output from 'ask'ed question", 1)
 
+            
+class Grammar(Event):
+
+    def scenario(self):
+        print "OH NOES! Your entire crew was infected by the virus of poor grammar."
+        print "Generic Crewmun: \"Your going to die captain!\""
+        
+        response = self.ask('How win?', ['Teach proper grammer', 'Revert ship to text talk'])
+        
+        if response == 0:
+            print "It took some time, but eventually every one learned there grammar again... eventually"
+        elif response == 1:
+            print "The grammar nazis invaded."
+            self.lose()
+        else:
+            self.lose("Error'd, received an unpossible output from 'ask'ed question", 1)
+            
 
 class Nothing(Event):
     
