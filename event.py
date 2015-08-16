@@ -6,20 +6,28 @@ import random, tools
 from sys import exit
 
 class Event(object):
+    """Base event class, enclosed are a few tools generally used across all events."""
     
+    # Add silly death messages to me =D
     lose_msgs = ['You deaded', 'DOOOOOOOOM!', 'You have been made unalive', 'Over Game :c',
                  'GG', 'You got rekt', 'RIP', 'Lel, supes dead', 'GG no re', 'Fin']
     
     def __init__(self, msg_invalid="Didn't understand that :/"):
+        """msg_invalid used for unacceptable answers in the 'ask' function"""
         self.invalid = msg_invalid
     
     
     def ask(self, question, answers, prompt='> '):
+        """Function to ask and process a question, 'answers' should be in a list object"""
+        ### add randomization to answer ordering? Randomize or make a crapton of questions/events
         print question
         
+        # displays answers
         for i in xrange(0, len(answers)):
             print '[%(i)i] %(answer)s' % {'i': i+1, 'answer': answers[i]}
         
+        # interprets the user's response, a valid response can be the integer of the answer's
+        # position, OR the full answer typed out.
         while True:
             response = raw_input(prompt)
             
@@ -39,6 +47,10 @@ class Event(object):
     
     
     def lose(self, msg=None, error=0):
+        """Game over output"""
+        
+        # error argument created with the original intention of handling impossible
+        # outputs from the 'ask' function
         if msg:
             print msg
         else:
@@ -50,7 +62,9 @@ class Event(object):
         
         exit(0)
 
+### =================================================
 ### ----------------- RIVER EVENTS ------------------
+### =================================================
     
 class Snakes(Event):
     
@@ -107,16 +121,19 @@ class Nothing(Event):
         print "It's calm in this stretch of river."
         
         
+### ==================================================
 ### --------------- <TOWN NAME> EVENTS ---------------
+### ==================================================
 
 
 
-
+### ==================================================
 ### ----------------- RANDOMIZE ME! ------------------
+### ==================================================
 
 class Generate(object):
     
-    events = [Snakes(), Rudder()]
+    events = [Snakes(), Rudder(), Grammar()]
     
     def __init__(self):
         i = random.randint(0, len(self.events)-1)
