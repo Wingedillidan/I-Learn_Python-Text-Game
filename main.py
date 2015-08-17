@@ -1,5 +1,6 @@
-import sail
+import sail, ui
 
 player = sail.Ship()
-engine = sail.Journey("Chimvera", player)
+ui = ui.Controller(player)
+engine = sail.Journey("Chimvera", player, ui)
 engine.begin()

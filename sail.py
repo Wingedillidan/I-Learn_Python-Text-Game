@@ -9,7 +9,7 @@
 #
 # Code by Collin McLean
 
-import tools, event, random
+import tools, event, random, ui
 from sys import exit
 
 ### =================================================
@@ -18,6 +18,10 @@ from sys import exit
 
 class Ship(object):
     """Player object defined as the ship sailing on the river."""
+    
+    ### MAKE THIS WORK
+    # ui = ui.Controller()
+    
     
     def __init__(self, hp=100, fuel=0, food=0, scrap=0, day=0):
         """Retains ship stats: health, fuel level (WIP), stored food (WIP), scrap (1 scrap increases chances
@@ -38,9 +42,23 @@ class Ship(object):
             print "Your ship is rekt!"
             exit(0)
     
-    # def UI(self): # legacy??
+    
+    def change(self, hp=0, fuel=0, food=0, scrap=0, day=0, speed=0, crew=0):
+        """Adjusts the ship stats and then checks for any possible lose conditions"""
         
-        # print 'HP:', self.hp
+        if self.hp + hp > 100:
+            self.hp = 100
+        else:
+            self.hp += hp
+            
+        self.fuel += fuel
+        self.food += food
+        self.scrap += scrap
+        self.day += day
+        self.speed += speed
+        self.crew += crew
+        
+        self.check()
 
 
 ### =================================================
@@ -55,15 +73,16 @@ class Town(object):
     distance = 0
     odds = 0
     
-    def __init__(self, ship):
+    def __init__(self, ship, ui):
         self.player = ship
+        self.ui = ui
     
     
     def sail(self):
         """Runs every event, or the distance, to the town and adjusts according
         to the speed set by the player."""
         
-        events = event.Library(self.player)
+        events = event.Library(self.player, self.ui)
         
         ### To do, figure out better way to manage speed
         for i in xrange(0, self.distance+self.player.speed):
@@ -140,16 +159,17 @@ class Journey(object):
     """Stores and navigates through the towns based on an order stored within
     each individual town object"""
     
-    def __init__(self, start, ship):
+    def __init__(self, start, ship, ui):
         """The ship argument is the player."""
         
         self.player = ship
+        self.ui = ui
         
         ### Is there a better way of doing this?
-        self.towns = {'Chimvera': Chimvera(self.player),
-        'Privako': Privako(self.player),
-        'Kaapa': Kaapa(self.player),
-        'PoopTown': PoopTown(self.player)
+        self.towns = {'Chimvera': Chimvera(self.player, ui),
+        'Privako': Privako(self.player, ui),
+        'Kaapa': Kaapa(self.player, ui),
+        'PoopTown': PoopTown(self.player, ui)
         }
         
         self.next = self.towns.get(start)

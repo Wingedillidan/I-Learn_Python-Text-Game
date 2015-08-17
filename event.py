@@ -12,10 +12,11 @@ class Event(object):
     lose_msgs = ['You deaded', 'DOOOOOOOOM!', 'You have been made unalive', 'Over Game :c',
                  'GG', 'You got rekt', 'RIP', 'Lel, supes dead', 'GG no re', 'Fin']
     
-    def __init__(self, player, msg_invalid="Didn't understand that :/"):
+    def __init__(self, player, ui, msg_invalid="Didn't understand that :/"):
         """msg_invalid used for unacceptable answers in the 'ask' function"""
         self.invalid = msg_invalid
         self.player = player
+        self.ui = ui
     
     
     def ask(self, question, answers, prompt='> '):
@@ -76,10 +77,10 @@ class Snakes(Event):
         
         if response == 0:
             print "You yell as loud as you can, the snakes don't understand fleshbag. [-10 health]"
-            self.player.hp -= 10
+            self.player.change(hp=-10)
         elif response == 1:
             print "You ate ALL the snakes, looks like you wiggled your way out of this one. [+2 food]"
-            self.player.food += 2
+            self.player.change(hp=2)
         else:
             self.lose("Error'd, received an unpossible output from 'ask'ed question", 1)
     
@@ -93,7 +94,7 @@ class Rudder(Event):
         
         if response == 0:
             print "Your stick only added to the jam. [-15 health]"
-            self.player.hp -= 15
+            self.player.change(hp=-15)
         elif response == 1:
             print "IMPROV!"
         else:
@@ -112,11 +113,10 @@ class Grammar(Event):
             print "It took some time, but eventually every one learned there grammar again... eventually [+1 day] [-5 health]" ### GET RID OF HARD CODE NAOW!
             
             ### make this better >.<
-            self.player.day += 1
-            self.player.hp -= 5
+            self.player.change(day=1, hp=-5)
         elif response == 1:
             print "The grammar nazis invaded. [-20 health]" ### Again, self, not this, you're better than this...
-            self.player.hp -= 20
+            self.player.change(hp=-20)
         else:
             self.lose("Error'd, received an unpossible output from 'ask'ed question", 1)
             
@@ -141,9 +141,10 @@ class Nothing(Event):
 class Library(object):
     """Manages event objects and randomly calls them up for adventureness"""
     
-    def __init__(self, player):
+    def __init__(self, player, ui):
+        self.ui = ui
         self.player = player
-        self.events = [Snakes(self.player), Rudder(self.player), Grammar(self.player)]
+        self.events = [Snakes(self.player, self.ui), Rudder(self.player, self.ui), Grammar(self.player, self.ui)]
         
     
     def generate(self, odds=70):
@@ -151,7 +152,7 @@ class Library(object):
         that there is no event/calm waters."""
         
         if random.randint(0,100) > odds:
-            Nothing(self.player).scenario()
+            Nothing(self.player, self.ui).scenario()
         else:
             i = random.randint(0, len(self.events)-1)
             self.events[i].scenario()
