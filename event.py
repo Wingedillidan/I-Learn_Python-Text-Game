@@ -12,9 +12,10 @@ class Event(object):
     lose_msgs = ['You deaded', 'DOOOOOOOOM!', 'You have been made unalive', 'Over Game :c',
                  'GG', 'You got rekt', 'RIP', 'Lel, supes dead', 'GG no re', 'Fin']
     
-    def __init__(self, msg_invalid="Didn't understand that :/"):
+    def __init__(self, player, msg_invalid="Didn't understand that :/"):
         """msg_invalid used for unacceptable answers in the 'ask' function"""
         self.invalid = msg_invalid
+        self.player = player
     
     
     def ask(self, question, answers, prompt='> '):
@@ -74,10 +75,11 @@ class Snakes(Event):
         response = self.ask('How to unsnake the boat?', ['Yell at them', 'Eat them'])
         
         if response == 0:
-            print "You yell as loud as you can, the snakes don't understand fleshbag."
-            self.lose("You deaded. c( o_o c)")
+            print "You yell as loud as you can, the snakes don't understand fleshbag. [-10 health]"
+            self.player.hp -= 10
         elif response == 1:
-            print "You ate ALL the snakes, looks like you wiggled your way out of this one."
+            print "You ate ALL the snakes, looks like you wiggled your way out of this one. [+2 food]"
+            self.player.food += 2
         else:
             self.lose("Error'd, received an unpossible output from 'ask'ed question", 1)
     
@@ -90,8 +92,8 @@ class Rudder(Event):
         response = self.ask('What do?', ['Use a stick to clear the clutter', 'Improvise'])
         
         if response == 0:
-            print "Your stick only added to the jam."
-            self.lose()
+            print "Your stick only added to the jam. [-15 health]"
+            self.player.hp -= 15
         elif response == 1:
             print "IMPROV!"
         else:
@@ -107,10 +109,14 @@ class Grammar(Event):
         response = self.ask('How win?', ['Teach proper grammer', 'Revert ship to text talk'])
         
         if response == 0:
-            print "It took some time, but eventually every one learned there grammar again... eventually"
+            print "It took some time, but eventually every one learned there grammar again... eventually [+1 day] [-5 health]" ### GET RID OF HARD CODE NAOW!
+            
+            ### make this better >.<
+            self.player.day += 1
+            self.player.hp -= 5
         elif response == 1:
-            print "The grammar nazis invaded."
-            self.lose()
+            print "The grammar nazis invaded. [-20 health]" ### Again, self, not this, you're better than this...
+            self.player.hp -= 20
         else:
             self.lose("Error'd, received an unpossible output from 'ask'ed question", 1)
             
@@ -128,15 +134,25 @@ class Nothing(Event):
 
 
 ### ==================================================
-### ----------------- RANDOMIZE ME! ------------------
+### ------------- EVENT MANAGER CLASSES --------------
 ### ==================================================
 
-class Generate(object):
+            
+class Library(object):
+    """Manages event objects and randomly calls them up for adventureness"""
     
-    events = [Snakes(), Rudder(), Grammar()]
-    
-    def __init__(self):
-        i = random.randint(0, len(self.events)-1)
+    def __init__(self, player):
+        self.player = player
+        self.events = [Snakes(self.player), Rudder(self.player), Grammar(self.player)]
         
-        self.events[i].scenario()
     
+    def generate(self, odds=70):
+        """Calls an event object, anything above the odds argument signals
+        that there is no event/calm waters."""
+        
+        if random.randint(0,100) > odds:
+            Nothing(self.player).scenario()
+        else:
+            i = random.randint(0, len(self.events)-1)
+            self.events[i].scenario()
+        

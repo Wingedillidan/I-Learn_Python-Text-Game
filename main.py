@@ -1,6 +1,5 @@
 import sail
 
 player = sail.Ship()
-map = sail.Map("Chimvera", player)
-engine = sail.Journey(map)
+engine = sail.Journey("Chimvera", player)
 engine.begin()

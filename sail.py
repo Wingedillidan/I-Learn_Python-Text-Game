@@ -1,12 +1,20 @@
-# Oregon trail style game with random events along the journey, except in a boat on the river.
-# There are 3 sections of riverway, each consist of (15, 10, 20) tiles, therefore there are 4 towns/stops
-# Sea is too open, open world games means lots of extra work =(
-# Possible names: Chrimvera, Privako
-# Type of boat? Uhhhhh
-# 
+# Oregon trail style game that puts the player sailing on a boat in a probably post-apocalyptic world wherein
+# you must sail through x amount of port towns and encounter dangerous events along the way.
+#
+# Every town consists of the town itself as-well-as the process of sailing to it, which is calculated
+# as each event equals one section of river, the speed of your travel modifies how many events you get
+# so the sections consist of a flexible theoretical time... this is still a WIP. River events are
+# randomized scenarios.
+# Type of boat? Uhhhhh 
+#
 # Code by Collin McLean
 
 import tools, event, random
+from sys import exit
+
+### =================================================
+### ------------------ THE PLAYER -------------------
+### =================================================
 
 class Ship(object):
     """Player object defined as the ship sailing on the river."""
@@ -21,27 +29,23 @@ class Ship(object):
         self.scrap = scrap
         self.day = day
         self.speed = 0
+        self.crew = 0
     
-    def UI(self):
+    def check(self):
+        ### Move around the lose function to incorporate it here
         
-        print 'HP:', self.hp
-        
-                    
-
-class River(object):
-    """Manages river event triggers and which ones trigger (pretty much all random)."""
-    def __init__(self):
-        pass
+        if self.hp <= 0:
+            print "Your ship is rekt!"
+            exit(0)
     
-    def setsail(self, odds=70):
-        """Calls a river event, anything above the odds threshold means
-        nothing happens/calm waters."""
+    # def UI(self): # legacy??
         
-        if random.randint(0, 100) > odds:
-            event.Nothing().scenario()
-        else:
-            event.Generate()
+        # print 'HP:', self.hp
 
+
+### =================================================
+### ------------------ TOWNS -------------------
+### =================================================
 
 class Town(object):
     """Base town class, introduces the function that runs the river travel
@@ -59,6 +63,8 @@ class Town(object):
         """Runs every event, or the distance, to the town and adjusts according
         to the speed set by the player."""
         
+        events = event.Library(self.player)
+        
         ### To do, figure out better way to manage speed
         for i in xrange(0, self.distance+self.player.speed):
             tools.clear(2)
@@ -67,7 +73,7 @@ class Town(object):
             # in post-apocalyptic environments (everything is post-apocalyptic... I think)
             self.player.hp -= 5
             print 'Day', self.player.day, '\nHealth:', self.player.hp
-            River().setsail()
+            events.generate(self.odds)
             
             tools.next()
             self.player.day += 1
@@ -130,7 +136,7 @@ class PoopTown(Town):
         exit(0)
 
 
-class Map(object):
+class Journey(object):
     """Stores and navigates through the towns based on an order stored within
     each individual town object"""
     
@@ -149,25 +155,12 @@ class Map(object):
         self.next = self.towns.get(start)
     
     
-    def town(self):
+    def begin(self):
         """The specific town returns the proper string"""
-        self.next = self.towns.get(self.next.sail())
+        while True:
+            self.next = self.towns.get(self.next.sail())
     
     def num(self):
         """Number of towns mapped out (any towns missing from the game need to be
         added to the towns dict within this class."""
         return len(self.towns)
-
-            
-class Journey(object):
-    """Game's Engine, needs a map to know where to go ;)"""
-    
-    def __init__(self, map):
-        self.map = map
-    
-    
-    def begin(self):
-        ### Is there a way to do this better?
-        ### Is there a way to reduce the amount of infrastructure classes?
-        while True:
-            self.map.town()
