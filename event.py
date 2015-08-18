@@ -80,7 +80,7 @@ class Snakes(Event):
             self.player.change(hp=-10)
         elif response == 1:
             print "You ate ALL the snakes, looks like you wiggled your way out of this one. [+2 food]"
-            self.player.change(hp=2)
+            self.player.change(food=2)
         else:
             self.lose("Error'd, received an unpossible output from 'ask'ed question", 1)
     

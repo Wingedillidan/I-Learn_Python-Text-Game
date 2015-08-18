@@ -90,7 +90,7 @@ class Town(object):
             
             # Each river event costs the player's ship 5hp for wear & tear
             # in post-apocalyptic environments (everything is post-apocalyptic... I think)
-            self.player.hp -= 5
+            self.player.change(hp=-5)
             print 'Day', self.player.day, '\nHealth:', self.player.hp
             events.generate(self.odds)
             
