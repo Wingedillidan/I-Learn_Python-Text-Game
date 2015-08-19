@@ -1,88 +1,92 @@
-class Box(object):
-    
-    def _sides(self, c=False):
-        column = '+'
-        lining = '-'
-        
-        if c:
-            column = '|'
-            lining = ' '
-        
-        return column + ' ' + lining * (self.x-4) + ' '  + column + '\n'
-    
-    
-    def _frame(self):
-        self.result += self._sides()
-        
-        body = self._sides(True)
-        self.result += body * (self.y-2)
-        
-        self.result += self._sides()
-    
-    
-    def __init__(self, x=5, y=5):
-        self.x = x
-        self.y = y
-        self.result = ""
-        
-        self._frame()
-        
+import tools, sail
 
 class Controller(object):
-    
-    def __init__(self, player):
-        self.player = player
-    
     
     def _fill(self, space, lines=1):
         result = ""
         line = " " * space
         
-        if lines:
-            for i in xrange(lines):
-                result += line + '\n'
+        for i in xrange(lines):
+            result += line + '\n'
+            
+        if not lines:
+            result += line
         
         return result
     
     
-    def _border(self, space, c=False, end=False):
+    def _border(self, space, c=False, start=True, end=False):
         result = ''
         column = ' + '
         lining = '-'
         
         if c:
             column = ' | '
-            lining = ' '
+            lining = ''
         
-        if space > 2:
-            result = column + lining * (space-2)
-        else:
-            result = 'Error, invalid border space argument supplied, minimum req. is 3'
+        if start:
+            result = self.padding
+        
+        result += column + lining * (space-2)
         
         if end:
-            result += column + '\n'
+            result += column + self.padding + '\n'
         
         return result
     
     
-    def _frame(self, space1=13, space2=72, height=5):
-        space = space1 + space2 + 5
+    def _frame(self):
+        space = self.box1 + self.box2 + 3 + (len(self.padding)*2)
         
-        result = self._fill(space, 4)
-        result += self._border(space1) + self._border(space2, end=True)
-        body = self._border(space1, c=True) + self._border(space2, c=True, end=True)
+        border = self._border(self.box1) + self._border(self.box2, start=False, end=True)
+        body = self._border(self.box1, c=True) + self._border(self.box2, c=True, start=False, end=True)
         
         # This is about where I realized that I was trying to make a text GUI...
         # AND this couldn't end well.
-        result += body * height
-        result += self._border(space1) + self._border(space2, end=True)
-        result += self._fill(space)
+        result = border
+        result += body * self.height
+        result += border
+        result += tools.clear(1, True)
         
-        return result
+        self.frame = result
     
     
-    def base(self):
-        pass
+    def _base(self):
+        self._frame()
     
-test = Controller(1)
-print test._frame(13, 72)
+        pos = 3
+        pos2 = 4
+        
+        space = self.box1 + len(self.padding) + 4
+        self.frame = self._fill(space, 0) + '%(pos1)s - %(pos2)s\n' + self.frame
+        
+        while True:
+            newthing = '| %(pos' + str(pos) + ')s | %(pos' + str(pos2) + ')s |'
+            thing = self.frame.find('|  |  |')
+            
+            if thing == -1:
+                break
+            
+            self.frame = self.frame.replace('|  |  |', newthing, 1)
+            pos += 2
+            pos2 += 2
+            
+            
+    def display(self, text):
+        tools.clear()
+        
+        print self.frame % self.content
+    
+    
+    def __init__(self, player, box1=13, box2=72, height=5, padding=1):
+        self.player = player
+        self.box1 = box1
+        self.box2 = box2
+        self.height = height
+        self.padding = ' ' * padding
+        self.frame = ""
+        self.content = {'pos1': 'Day '+str(self.player.day), 'pos2': self.player.place,
+            'pos3': 'Health: ' + str(self.player.hp)}
+        
+        self._base()
+

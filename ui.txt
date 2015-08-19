@@ -1,0 +1,8 @@
+                  Day $day - $place
+   + - - - - - - - + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+   | Health: $hp | $line1 |
+   | Fuel: $fuel     | $line2 |
+   | Food: $food     | $line3 |
+   | Scrap: $scrap    | $line4 |
+   | Crew: $crew     | $line5 |
+   + - - - - - - - + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +

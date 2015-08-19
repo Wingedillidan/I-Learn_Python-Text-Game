@@ -1,4 +1,4 @@
-def clear(lines=50):
+def clear(lines=50, r=False):
     result = ''
     
     for i in xrange((lines-1) / 2):
@@ -8,6 +8,9 @@ def clear(lines=50):
         result = ''
     elif lines % 2 == 0:
         result += "\n"
+    
+    if r:
+        return result
     
     print result
 

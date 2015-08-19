@@ -23,7 +23,7 @@ class Ship(object):
     # ui = ui.Controller()
     
     
-    def __init__(self, hp=100, fuel=0, food=0, scrap=0, day=0):
+    def __init__(self, hp=100, fuel=0, food=0, scrap=0, day=0, place=None):
         """Retains ship stats: health, fuel level (WIP), stored food (WIP), scrap (1 scrap increases chances
         at a full 25hp rebuild), day, and speed (modifies amount of river sections to destination, WIP)."""
         
@@ -34,6 +34,7 @@ class Ship(object):
         self.day = day
         self.speed = 0
         self.crew = 0
+        self.place = place
     
     def check(self):
         ### Move around the lose function to incorporate it here
@@ -43,7 +44,7 @@ class Ship(object):
             exit(0)
     
     
-    def change(self, hp=0, fuel=0, food=0, scrap=0, day=0, speed=0, crew=0):
+    def change(self, hp=0, fuel=0, food=0, scrap=0, day=0, speed=0, crew=0, place=None):
         """Adjusts the ship stats and then checks for any possible lose conditions"""
         
         if self.hp + hp > 100:
@@ -57,6 +58,9 @@ class Ship(object):
         self.day += day
         self.speed += speed
         self.crew += crew
+        
+        if place:
+            self.place = place
         
         self.check()
 
@@ -72,6 +76,7 @@ class Town(object):
     # Distance is equivalent to amount of possible river events
     distance = 0
     odds = 0
+    name = None
     
     def __init__(self, ship, ui):
         self.player = ship
@@ -90,21 +95,22 @@ class Town(object):
             
             # Each river event costs the player's ship 5hp for wear & tear
             # in post-apocalyptic environments (everything is post-apocalyptic... I think)
-            self.player.change(hp=-5)
+            self.player.change(hp=-5, place="River")
             print 'Day', self.player.day, '\nHealth:', self.player.hp
             events.generate(self.odds)
             
             tools.next()
-            self.player.day += 1
+            self.player.change(day=1)
         
         tools.clear(2)
         print 'Day', self.player.day, '\nHealth:', self.player.hp
         
         ### Fix formatting, this needs its own function or class
+        self.player.change(place=self.name)
         result = self.enter()
         tools.next()
         tools.clear()
-        self.player.day += 1
+        self.player.change(day=1)
         
         return result
     
@@ -116,6 +122,8 @@ class Town(object):
 
 class Chimvera(Town):
     
+    name = 'Chimvera'
+    
     def enter(self):
         print "CHIMVERA HOLDER"
         
@@ -124,6 +132,7 @@ class Chimvera(Town):
 
 class Privako(Town): 
     
+    name = 'Privako'
     distance = 5
     odds = 70
     
@@ -135,6 +144,7 @@ class Privako(Town):
     
 class Kaapa(Town):
     
+    name = 'Kaapa'
     distance = 1
     odds = 80
     
@@ -146,6 +156,7 @@ class Kaapa(Town):
 
 class PoopTown(Town):
     
+    name = 'PoopTown'
     distance = 1
     odds = 90
     
