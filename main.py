@@ -4,6 +4,7 @@ player = sail.Ship()
 ui = ui.Controller(player)
 engine = sail.Journey("Chimvera", player, ui)
 engine.begin()
+worthless_function()
 
 # me = sail.Ship()
 # test = ui.Controller(me)
