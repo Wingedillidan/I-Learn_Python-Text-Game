@@ -7,4 +7,4 @@ engine.begin()
 
 # me = sail.Ship()
 # test = ui.Controller(me)
-# test.display(1)
+# print test.display("HI!\nTHERE!\nWHERE\nARE\nYOU\nFROM?")

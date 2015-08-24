@@ -19,9 +19,9 @@ from sys import exit
 class Ship(object):
     """Player object defined as the ship sailing on the river."""
     
-    ### MAKE THIS WORK
-    # ui = ui.Controller()
-    
+    # Add silly death messages to me =D
+    lose_msgs = ['You deaded', 'DOOOOOOOOM!', 'You have been made unalive', 'Over Game :c',
+                 'GG', 'You got rekt', 'RIP', 'Lel, supes dead', 'GG no re', 'Fin']
     
     def __init__(self, hp=100, fuel=0, food=0, scrap=0, day=0, place=None):
         """Retains ship stats: health, fuel level (WIP), stored food (WIP), scrap (1 scrap increases chances
@@ -35,12 +35,15 @@ class Ship(object):
         self.speed = 0
         self.crew = 0
         self.place = place
+        self.contents = {'hp': self.hp, 'fuel': self.fuel, 'food': self.food, 'scrap': self.scrap, 
+            'day': self.day, 'speed': self.speed, 'crew': self.crew, 'place': self.place}
     
     def check(self):
         ### Move around the lose function to incorporate it here
         
         if self.hp <= 0:
-            print "Your ship is rekt!"
+            i = random.randint(0, len(self.lose_msgs)-1)
+            print self.lose_msgs[i]
             exit(0)
     
     
@@ -91,25 +94,20 @@ class Town(object):
         
         ### To do, figure out better way to manage speed
         for i in xrange(0, self.distance+self.player.speed):
-            tools.clear(2)
-            
             # Each river event costs the player's ship 5hp for wear & tear
             # in post-apocalyptic environments (everything is post-apocalyptic... I think)
             self.player.change(hp=-5, place="River")
-            print 'Day', self.player.day, '\nHealth:', self.player.hp
+            tools.clear(5)
+            print 'Day {} - Health: {}\n'.format(self.player.day, self.player.hp)
             events.generate(self.odds)
             
             tools.next()
             self.player.change(day=1)
         
-        tools.clear(2)
-        print 'Day', self.player.day, '\nHealth:', self.player.hp
-        
-        ### Fix formatting, this needs its own function or class
         self.player.change(place=self.name)
-        result = self.enter()
-        tools.next()
         tools.clear()
+        print 'Day {} - Health: {}\n'.format(self.player.day, self.player.hp)
+        result = self.enter()
         self.player.change(day=1)
         
         return result
@@ -145,7 +143,7 @@ class Privako(Town):
 class Kaapa(Town):
     
     name = 'Kaapa'
-    distance = 1
+    distance = 5
     odds = 80
     
     def enter(self):
@@ -157,7 +155,7 @@ class Kaapa(Town):
 class PoopTown(Town):
     
     name = 'PoopTown'
-    distance = 1
+    distance = 10
     odds = 90
     
     def enter(self):
