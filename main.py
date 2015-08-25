@@ -1,10 +1,11 @@
-import sail, ui
+import sail
+import ui
 
-player = sail.Ship()
-ui = ui.Controller(player)
-engine = sail.Journey("Chimvera", player, ui)
-engine.begin()
+# player = sail.Ship()
+# ui = ui.Controller(player)
+# engine = sail.Journey("Chimvera", player, ui)
+# engine.begin()
 
-# me = sail.Ship()
-# test = ui.Controller(me)
-# print test.display("HI!\nTHERE!\nWHERE\nARE\nYOU\nFROM?")
+me = sail.Ship()
+test = ui.Controller(me)
+print test.display("HI!\nTHERE!\nWHERE\nARE\nYOU\nFROM?")
