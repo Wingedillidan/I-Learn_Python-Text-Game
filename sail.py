@@ -1,5 +1,5 @@
 # Oregon trail style game that puts the player sailing on a boat in a probably post-apocalyptic world wherein
-# you must sail through x1 amount of port towns and encounter dangerous events along the way.
+# you must sail through x amount of port towns and encounter dangerous events along the way.
 #
 # Every town consists of the town itself as-well-as the process of sailing to it, which is calculated
 # as each event equals one section of river, the speed of your travel modifies how many events you get
