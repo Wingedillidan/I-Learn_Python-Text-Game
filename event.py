@@ -4,6 +4,7 @@
 
 import random
 import tools
+from player import carmine
 from sys import exit
 
 
@@ -11,11 +12,9 @@ class Event(object):
     """Base event class, enclosed are a few tools generally used across
     all events."""
 
-    def __init__(self, player, ui, msg_invalid="Didn't understand that :/"):
+    def __init__(self, msg_invalid="Didn't understand that :/"):
         """msg_invalid used for unacceptable answers in the 'ask' function"""
         self.invalid = msg_invalid
-        self.player = player
-        self.ui = ui
 
     def ask(self, question, answers, prompt='> '):
         """Function to ask and process a question, 'answers' should be in a
@@ -70,11 +69,11 @@ class Snakes(Event):
         if response == 0:
             print "You yell as loud as you can, the snakes don't understand \
                    fleshbag. [-10 health]"
-            self.player.change(hp=-10)
+            carmine.change(hp=-10)
         elif response == 1:
             print "You ate ALL the snakes, looks like you wiggled your way \
                    out of this one. [+2 food]"
-            self.player.change(food=2)
+            carmine.change(food=2)
         else:
             self.error()
 
@@ -89,7 +88,7 @@ class Rudder(Event):
 
         if response == 0:
             print "Your stick only added to the jam. [-15 health]"
-            self.player.change(hp=-15)
+            carmine.change(hp=-15)
         elif response == 1:
             print" IMPROV!"
         else:
@@ -111,11 +110,11 @@ class Grammar(Event):
             # GET RID OF HARD CODE NAOW!
             print "It took some time, but eventually every one learned there \
                    grammar again... eventually [+1 day] [-5 health]"
-            self.player.change(day=1, hp=-5)
+            carmine.change(day=1, hp=-5)
         elif response == 1:
             # Again, self, not this, you're better than this...
             print "The grammar nazis invaded. [-20 health]"
-            self.player.change(hp=-20)
+            carmine.change(hp=-20)
         else:
             self.error()
 
@@ -135,13 +134,13 @@ class Seattle(Event):
 
         if response == 2:
             print 'Uh-huh... we need to have a chat [+2 days] [-10 health]'
-            self.player.change(hp=-10, day=2)
+            carmine.change(hp=-10, day=2)
         elif response == 1:
             print 'Alright then, carry on...'
         elif response == 0:
             print 'Well, in this part of the river we compost, let me tell \
                    you why... [+1 day] [-5 health]'
-            self.player.change(hp=-5, day=1)
+            carmine.change(hp=-5, day=1)
         else:
             self.error()
 
@@ -161,7 +160,7 @@ class Fork(Event):
             i = random.randint(0, len(things)-1)
 
             print "{} attacked your ship D: [-10 health]".format(things[i])
-            self.player.change(hp=-10)
+            carmine.change(hp=-10)
 
 
 class Abandoned(Event):
@@ -179,10 +178,10 @@ class Abandoned(Event):
                 print "SEA ZOOOMBIES!!!"
                 if random.randint(0, 1) == 1:
                     print "RUUUUUN [+1 day] [-5 health]"
-                    self.player.change(day=1, hp=-5)
+                    carmine.change(day=1, hp=-5)
                 else:
                     print "Ya got overwhelmed a bit [+2 days] [-15 health]"
-                    self.player.change(day=2, hp=-15)
+                    carmine.change(day=2, hp=-15)
 
 
 class Nothing(Event):
@@ -204,24 +203,21 @@ class Nothing(Event):
 class Library(object):
     """Manages event objects and randomly calls them up for adventureness"""
 
-    def __init__(self, player, ui):
-        self.ui = ui
-        self.player = player
-        self.events = [Snakes(self.player, self.ui),
-                       Rudder(self.player, self.ui),
-                       Grammar(self.player, self.ui),
-                       Seattle(self.player, self.ui),
-                       Fork(self.player, self.ui),
-                       Abandoned(self.player, self.ui)
+    def __init__(self):
+        self.events = [Snakes(),
+                       Rudder(),
+                       Grammar(),
+                       Seattle(),
+                       Fork(),
+                       Abandoned()
                        ]
-
 
     def generate(self, odds=70):
         """Calls an event object, anything above the odds argument signals
         that there is no event/calm waters."""
 
-        if random.randint(0,100) > odds:
-            Nothing(self.player, self.ui).scenario()
+        if random.randint(0, 100) > odds:
+            Nothing().scenario()
         else:
             i = random.randint(0, len(self.events)-1)
             self.events[i].scenario()

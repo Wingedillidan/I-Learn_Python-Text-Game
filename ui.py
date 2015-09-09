@@ -66,14 +66,16 @@ class Controller(object):
 
         self._mkdict()
 
-    def display(self, text, len=75, clear=50):
+    def display(self, text, length=75, clear=50):
         """Takes a given prompt and fills the ui lines for proper printing."""
         # TO DO: Fix hardcoded numbers
         # This has to update player stats by rereading the whole dictionary
         # every time :/
         self._mkdict()
         tools.clear(clear)
-        count = 1; find = 0; cont = False
+        count = 1
+        find = 0
+        cont = False
         working = text
 
         while working:
@@ -81,10 +83,10 @@ class Controller(object):
             # find a line break (if any) including up to the very possible end,
             # hence the +1 anything beyond is certain to be a part of the next
             # line
-            if '\n' in working[:len+1]:
+            if '\n' in working[:length+1]:
                 find = working.find('\n')
             else:
-                find = len
+                find = length
 
             fillkey = 'line' + str(count)
 
