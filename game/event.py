@@ -20,8 +20,6 @@ class Event(object):
     def ask(self, question, answers, prompt='> '):
         """Function to ask and process a question, 'answers' should be in a
         list object"""
-        # add randomization to answer ordering? Randomize or make a crapton
-        # of questions/events
         printme = ""
 
         printme += question + '\n'
@@ -116,6 +114,7 @@ class Grammar(Event):
             # GET RID OF HARD CODE NAOW!
             print "It took some time, but eventually every one learned there \
                    grammar again... eventually [+1 day] [-5 health]"
+
             carmine.change(day=1, hp=-5)
         elif response == 1:
             # Again, self, not this, you're better than this...
