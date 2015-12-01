@@ -20,9 +20,7 @@ class Event(object):
     def ask(self, question, answers, prompt='> '):
         """Function to ask and process a question, 'answers' should be in a
         list object"""
-        printme = ""
-
-        printme += question + '\n'
+        printme = question + '\n'
 
         # displays answers
         for i in xrange(0, len(answers)):
@@ -65,7 +63,7 @@ class Event(object):
 class Snakes(Event):
 
     def scenario(self):
-        print "OH NOES! SNAKES ARRIVED ON YOUR BOAT!"
+        printer.display("OH NOES! SNAKES ARRIVED ON YOUR BOAT!")
 
         response = self.ask('How to unsnake the boat?',
                             ['Yell at them', 'Eat them'])
